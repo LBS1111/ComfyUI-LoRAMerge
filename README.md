@@ -1,65 +1,65 @@
 # ComfyUI-LoRAMerge
 
-![LoRA Merge Logo/Banner (Optional: You can add an image here)](https://placehold.co/600x150/2E8B57/white/png?text=ComfyUI-LoRAMerge)
+![ComfyUI-LoRAMerge 典型工作流]([图片上传后的URL])
+一个专为 ComfyUI 设计的自定义节点集，用于**零输入**加载、精确**融合**和**自动保存** LoRA 模型权重。完美解决了多个 LoRA 模型效果叠加和文件管理的需求。
 
-A specialized set of custom nodes for ComfyUI designed for **zero-input** loading, precise **merging**, and **automatic saving** of LoRA model weights. This plugin is essential for seamlessly managing and combining the effects of multiple LoRA models.
+---
 
-## ✨ Key Features
+## ✨ 主要特性
 
-* **Zero-Input LoRA Selection:** The dedicated `LoRADataEmitter` node allows you to select and extract LoRA weights independently, without needing to connect a base model input.
-* **Linear Merge Core:** The `LoRAMerger` node provides fine-grained control over the mixing ratio using the `ratio` parameter, determining the contribution of LoRA A and LoRA B (from 0.0 to 1.0).
-* **Automatic Unique Saving:** The `LoRASaver` automatically appends a timestamp to the filename of the merged model, guaranteeing a unique file name for every save operation and preventing accidental file overwrites.
-* **Workflow Separation:** Designed to handle the LoRA data stream separately from the main image generation workflow.
+* **零输入 LoRA 选择：** 提供独立的 `LoRA数据发射器` 节点，您无需连接模型输入，即可独立选择和提取 LoRA 权重。
+* **线性融合核心：** `LoRA数据融合器` 允许您通过 `ratio` 参数精确控制两个 LoRA 模型 (LoRA A 和 LoRA B) 的混合比例，实现精细的风格或概念叠加。
+* **自动命名保存：** `LoRA模型保存器` 自动为融合后的模型添加时间戳，确保每次保存都生成一个唯一的文件名，避免文件覆盖。
+* **工作流分离：** 专为 LoRA 数据流设计，实现 LoRA 融合与图像生成工作流的分离。
 
-## 📦 Node List
+## 📦 节点列表
 
-All nodes can be found in the menu under **`LoRAMerge/Tools`**.
+所有节点位于菜单 **`LoRAMerge/Tools`** 下。
 
-| Node Name | Function | Input Type | Output Type |
+| 节点名称 | 作用 | 输入类型 | 输出类型 |
 | :--- | :--- | :--- | :--- |
-| **LoRA数据发射器 (Dict输出)** | Independently loads the selected LoRA file and extracts the raw weights. | **(Zero Inputs)** | `LORA_DATA` (Custom LoRA Dictionary) |
-| **LoRA数据融合器 (Merge)** | Blends two `LORA_DATA` inputs based on the defined `ratio`. | `LORA_DATA A`, `LORA_DATA B`, `FLOAT (ratio)` | `LORA_DATA` (Merged Dictionary) |
-| **LoRA模型保存器 (Save)** | Saves the input `LORA_DATA` dictionary as a new `.safetensors` model file with a unique, timestamped name. | `LORA_DATA` | `STRING` (Save Status, used to trigger the workflow) |
+| **LoRA数据发射器 (Dict输出)** | 独立加载选定的 LoRA 文件。 | **(零输入)** | `LORA_DATA` (自定义 LoRA 字典) |
+| **LoRA数据融合器 (Merge)** | 根据 `ratio` 比例，融合两个 `LORA_DATA` 输入。 | `LORA_DATA A`, `LORA_DATA B`, `FLOAT (ratio)` | `LORA_DATA` (融合后的字典) |
+| **LoRA模型保存器 (Save)** | 将输入的 `LORA_DATA` 字典保存为 `.safetensors` 模型文件。 | `LORA_DATA` | `STRING` (保存状态，用于触发工作流) |
 
-## 🚀 Installation
+## 🚀 安装步骤
 
-1.  **Stop ComfyUI:** Ensure your ComfyUI backend server is completely shut down.
-2.  **Clone the Repository:** Open your command line or Git Bash and navigate to the `custom_nodes` folder:
+1.  **关闭 ComfyUI：** 确保您的 ComfyUI 后台服务已完全停止。
+2.  **克隆仓库：** 打开命令行或 Git Bash，进入 ComfyUI 的 `custom_nodes` 文件夹：
     ```bash
-    cd [Your ComfyUI Path]/ComfyUI/custom_nodes/
+    cd [您的ComfyUI路径]/ComfyUI/custom_nodes/
     ```
-    Execute the clone command (using your actual URL):
+    执行克隆命令：
     ```bash
-    git clone [Your GitHub Repository URL] ComfyUI-LoRAMerge
+    git clone [您的 GitHub 仓库 URL] ComfyUI-LoRAMerge
     ```
-3.  **Restart ComfyUI:** Start ComfyUI. The new nodes will appear under the **`LoRAMerge/Tools`** menu.
+3.  **重新启动 ComfyUI：** 启动 ComfyUI，节点将出现在 **`LoRAMerge/Tools`** 菜单下。
 
-## 💡 Example Workflow: Merge and Save
+## 💡 典型工作流：融合与保存
 
-This workflow demonstrates how to successfully merge two LoRAs and save the result:
+这是一个典型的 LoRA 融合和保存流程的工作流：
 
-1.  **Create Emitters A & B:**
-    * Add two `LoRA数据发射器 (Dict输出)` nodes.
-    * Select LoRA A and LoRA B files respectively.
-2.  **Create Merger:**
-    * Add the `LoRA数据融合器 (Merge)` node.
-    * Connect the `LORA_WEIGHTS_DICT` outputs from the Emitters to the Merger's `lora_data_a` and `lora_data_b` inputs.
-    * Adjust the `ratio` (e.g., 0.50 for a 50/50 mix).
-3.  **Create Saver:**
-    * Add the `LoRA模型保存器 (Save)` node.
-    * Connect the Merger's `LORA_WEIGHTS_MERGED` output to the Saver's `lora_data` input.
-    * Change the `filename_prefix` (e.g., `my_merged_lora/style_char_v1`).
-4.  **Connect to Main Flow (Crucial for Execution):**
-    * Add a **`Print Text`** or **`Primitive`** node.
-    * Connect the **Saver's `SAVE_STATUS`** output to the input of the `Print Text` node.
-    * The `Print Text` node (or any element in this chain) **must** be connected somewhere to your main image generation flow (e.g., to an unused input of a `Preview Image` node) to force ComfyUI to execute the save chain when you click `Queue Prompt`.
+1.  **创建发射器 A & B：**
+    * 添加两个 `LoRA数据发射器 (Dict输出)`。
+    * 分别选择 LoRA A 和 LoRA B 文件。
+2.  **创建融合器：**
+    * 添加 `LoRA数据融合器 (Merge)` 节点。
+    * 将发射器 A 和 B 的 `LORA_WEIGHTS_DICT` 输出连接到 `lora_data_a` 和 `lora_data_b`。
+    * 调整 `ratio` (例如 0.54)。
+3.  **创建保存器：**
+    * 添加 `LoRA模型保存器 (Save)` 节点。
+    * 将融合器的 `LORA_WEIGHTS_MERGED` 输出连接到保存器的 `lora_data` 输入。
+    * 修改 `filename_prefix` (例如 `my_merged_lora/style_char_v1`)。
+4.  **连接到主流程 (触发执行)：**
+    * 添加一个 `Print Text` 或 `Primitive` 节点。
+    * 将 **保存器** 的 **`SAVE_STATUS`** 输出连接到 `Print Text` 的输入。
+    * 将 `Print Text` 连接到您的**图像生成主流程**中的一个节点（例如 `Preview Image` 的隐藏输入或 `VAE Decode` 的隐藏输入），以确保整个链条在 `Queue Prompt` 时被执行。
 
-**Save Location:**
+**保存位置：**
 
-The final `.safetensors` file will be saved in your ComfyUI **`output`** folder, with an automatic timestamp appended. Example file path:
-
+融合后的 `.safetensors` 文件将保存到您的 ComfyUI **`output`** 文件夹中，并自动带上时间戳后缀，例如：
 `ComfyUI/output/my_merged_lora/style_char_v1_20251121_195500.safetensors`
 
-## License
+## 许可证
 
-This project is licensed under the [Specify your preferred license, e.g., MIT License].
+本项目遵循 [MIT License / Apache License 2.0 / etc.] 许可。
