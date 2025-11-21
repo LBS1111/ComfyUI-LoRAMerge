@@ -62,4 +62,4 @@
 
 ## 许可证
 
-本项目遵循 [MIT License / Apache License 2.0 / etc.] 许可。
+本项目遵循 [MIT License / Apache License 2.0  ] 许可。
