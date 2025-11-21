@@ -31,7 +31,7 @@
     ```
     执行克隆命令：
     ```bash
-    git clone [您的 GitHub 仓库 URL] ComfyUI-LoRAMerge
+    [git clone [您的 GitHub 仓库 URL] ComfyUI-LoRAMerge](https://github.com/LBS1111/ComfyUI-LoRAMerge.git)
     ```
 3.  **重新启动 ComfyUI：** 启动 ComfyUI，节点将出现在 **`LoRAMerge/Tools`** 菜单下。
 
