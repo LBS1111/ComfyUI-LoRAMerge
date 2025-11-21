@@ -1,0 +1,238 @@
+{
+  "id": "7a23a864-9689-4ffd-b264-62780ae68bc0",
+  "revision": 0,
+  "last_node_id": 71,
+  "last_link_id": 92,
+  "nodes": [
+    {
+      "id": 33,
+      "type": "LoRADataEmitter",
+      "pos": [
+        732.5827189767231,
+        1614.7828406344477
+      ],
+      "size": [
+        270.2447265625,
+        58
+      ],
+      "flags": {},
+      "order": 0,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "LORA_WEIGHTS_DICT",
+          "type": "LORA_DATA",
+          "links": [
+            39
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "LoRADataEmitter"
+      },
+      "widgets_values": [
+        "HyperdetailedRealismMJ7SDXL.safetensors"
+      ]
+    },
+    {
+      "id": 34,
+      "type": "LoRAMerger",
+      "pos": [
+        1078.0583102145574,
+        1484.2187508602635
+      ],
+      "size": [
+        323.080078125,
+        78
+      ],
+      "flags": {},
+      "order": 2,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "lora_data_a",
+          "type": "LORA_DATA",
+          "link": 38
+        },
+        {
+          "name": "lora_data_b",
+          "type": "LORA_DATA",
+          "link": 39
+        }
+      ],
+      "outputs": [
+        {
+          "name": "LORA_WEIGHTS_MERGED",
+          "type": "LORA_DATA",
+          "links": [
+            40
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "LoRAMerger"
+      },
+      "widgets_values": [
+        0.54
+      ]
+    },
+    {
+      "id": 32,
+      "type": "LoRADataEmitter",
+      "pos": [
+        721.0548055806078,
+        1441.3293984083093
+      ],
+      "size": [
+        270.2447265625,
+        58
+      ],
+      "flags": {},
+      "order": 1,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "LORA_WEIGHTS_DICT",
+          "type": "LORA_DATA",
+          "links": [
+            38
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "LoRADataEmitter"
+      },
+      "widgets_values": [
+        "lightx2v_T2V_14B_cfg_step_distill_v2_lora_rank64_bf16.safetensors"
+      ]
+    },
+    {
+      "id": 35,
+      "type": "LoRASaver",
+      "pos": [
+        1451.349840820865,
+        1482.7364942452239
+      ],
+      "size": [
+        270,
+        58
+      ],
+      "flags": {},
+      "order": 3,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "lora_data",
+          "type": "LORA_DATA",
+          "link": 40
+        }
+      ],
+      "outputs": [
+        {
+          "name": "SAVE_STATUS",
+          "type": "STRING",
+          "links": [
+            42
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "LoRASaver"
+      },
+      "widgets_values": [
+        "merged_lora/merged"
+      ]
+    },
+    {
+      "id": 38,
+      "type": "ShowText|pysssss",
+      "pos": [
+        1809.326074325573,
+        1493.3741753386028
+      ],
+      "size": [
+        344.065337031388,
+        88
+      ],
+      "flags": {},
+      "order": 4,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "text",
+          "type": "STRING",
+          "link": 42
+        }
+      ],
+      "outputs": [
+        {
+          "name": "STRING",
+          "shape": 6,
+          "type": "STRING",
+          "links": null
+        }
+      ],
+      "properties": {
+        "cnr_id": "comfyui-custom-scripts",
+        "ver": "f2838ed5e59de4d73cde5c98354b87a8d3200190",
+        "Node name for S&R": "ShowText|pysssss"
+      },
+      "widgets_values": [
+        "LoRA模型保存完成: E:\\ComfyUI\\ComfyUI\\ComfyUI\\output\\merged_lora/merged_20251121_205632.safetensors"
+      ]
+    }
+  ],
+  "links": [
+    [
+      38,
+      32,
+      0,
+      34,
+      0,
+      "LORA_DATA"
+    ],
+    [
+      39,
+      33,
+      0,
+      34,
+      1,
+      "LORA_DATA"
+    ],
+    [
+      40,
+      34,
+      0,
+      35,
+      0,
+      "LORA_DATA"
+    ],
+    [
+      42,
+      35,
+      0,
+      38,
+      0,
+      "STRING"
+    ]
+  ],
+  "groups": [],
+  "config": {},
+  "extra": {
+    "ds": {
+      "scale": 0.3380916604057101,
+      "offset": [
+        2119.639867462991,
+        1283.48604214976
+      ]
+    },
+    "frontendVersion": "1.28.7",
+    "VHS_latentpreview": false,
+    "VHS_latentpreviewrate": 0,
+    "VHS_MetadataImage": true,
+    "VHS_KeepIntermediate": true
+  },
+  "version": 0.4
+}
