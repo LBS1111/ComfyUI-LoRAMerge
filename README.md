@@ -1,6 +1,6 @@
 # ComfyUI-LoRAMerge
 
-https://raw.githubusercontent.com/LBS1111/ComfyUI-LoRAMerge/refs/heads/main/2159324ef57f8dd14f26dd7b1e804d1d.png
+![ComfyUI-LoRAMerge 典型工作流](https://raw.githubusercontent.com/LBS1111/ComfyUI-LoRAMerge/refs/heads/main/2159324ef57f8dd14f26dd7b1e804d1d.png)
 一个专为 ComfyUI 设计的自定义节点集，用于**零输入**加载、精确**融合**和**自动保存** LoRA 模型权重。完美解决了多个 LoRA 模型效果叠加和文件管理的需求。
 
 ---
