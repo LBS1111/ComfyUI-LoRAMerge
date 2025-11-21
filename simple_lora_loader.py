@@ -4,7 +4,7 @@ import comfy.model_management
 from comfy.utils import load_torch_file, save_torch_file
 import folder_paths
 import numpy as np
-import datetime # <-- 新增导入，用于时间戳命名
+import datetime # 用于时间戳命名
 
 
 # 定义自定义输出类型。
@@ -65,13 +65,15 @@ class LoRAMerger:
     def INPUT_TYPES(s):
         return {
             "required": {
-                "lora_data_a": (LORA_DATA_TYPE,), 
-                "lora_data_b": (LORA_DATA_TYPE,),
+                "lora_data_a": ("LORA_DATA",), 
+                "lora_data_b": ("LORA_DATA",),
                 "ratio": ("FLOAT", {"default": 0.5, "min": 0.0, "max": 1.0, "step": 0.01}),
+                # 新增模式选择：线性、相加、乘法
+                "mode": (["Linear", "Additive", "Multiplicative"], {"default": "Linear"}),
             }
         }
 
-    def merge_loras(self, lora_data_a, lora_data_b, ratio):
+    def merge_loras(self, lora_data_a, lora_data_b, ratio, mode): 
         if not lora_data_a or not lora_data_b:
             raise Exception("错误：LoRA 融合需要两个有效的 LORA_DATA 输入。")
 
@@ -82,7 +84,19 @@ class LoRAMerger:
                 tensor_a = merged_data[key].float() 
                 tensor_b = lora_data_b[key].float()
                 
-                merged_tensor = torch.lerp(tensor_a, tensor_b, ratio)
+                if mode == "Linear":
+                    # 模式 1: 线性插值 (Weighted Sum)
+                    # 公式: (1 - ratio) * W_A + ratio * W_B
+                    merged_tensor = torch.lerp(tensor_a, tensor_b, ratio)
+                
+                elif mode == "Additive" or mode == "Multiplicative":
+                    # 模式 2 & 3: 相加或乘法叠加
+                    # 公式: W_A + ratio * W_B (W_B的效果以ratio强度叠加到W_A上)
+                    merged_tensor = tensor_a + ratio * tensor_b
+                
+                else:
+                    raise Exception(f"不支持的融合模式: {mode}")
+
                 merged_data[key] = merged_tensor
         
         return (merged_data,)
@@ -106,15 +120,14 @@ class LoRASaver:
     def INPUT_TYPES(s):
         return {
             "required": {
-                "lora_data": (LORA_DATA_TYPE,), 
-                # 默认值仍为 merged_lora/merged
+                "lora_data": ("LORA_DATA",), 
                 "filename_prefix": ("STRING", {"default": "merged_lora/merged"}), 
             },
             # 必须设置 hidden 来触发执行
             "hidden": {"prompt": "PROMPT", "extra_pnginfo": "EXTRA_PNGINFO"}, 
         }
 
-    # 关键修复：添加 prompt/extra_pnginfo 参数，并实现时间戳命名
+    # 包含 prompt 和 extra_pnginfo 参数，并实现时间戳命名
     def save_lora(self, lora_data, filename_prefix, prompt=None, extra_pnginfo=None): 
         
         # 1. 获取基础保存路径 (默认 output 目录)
